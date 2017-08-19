@@ -1,0 +1,397 @@
+<!-- jQuery, jQuery UI, and Bootstrap js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Gdrive resource to save to record drive -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<!-- Waypoints library for tooltips -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+
+<script>
+/* - - - - - - - HTML to PDF Conversion - - - - - - - */
+
+    /* Call convertToPDF from server-side */
+    function submitQuickQuote() {
+
+         /* Hide UI from PDF */
+         var toggleme = document.querySelector('.hide-on-pdf');
+         toggleme.classList.add('active');
+
+         var html = $('#printPage').html();
+
+         var convertToPDF = google.script.run
+              .withSuccessHandler(onSuccess)
+              .withFailureHandler(onFailure)
+              .convertToPDF(html);
+    }
+
+    /* Create URL to download a file on local machine */
+    function downloadFile(filename, contentType, data) {
+        if (window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveBlob(data, filename);
+        } else {
+            var a = window.document.createElement('a');
+            a.href = window.URL.createObjectURL(data, {type : contentType});
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    }
+
+    /* Create PDF blob from base64 */
+    function base64ToPDF(base64) {
+        var bin = atob(base64.replace(/^.*,/, ''));
+        var buffer = new Uint8Array(bin.length);
+
+        for (var i = 0; i < bin.length; i++)
+             buffer[i] = bin.charCodeAt(i);
+
+        try {
+             return new Blob([buffer.buffer], { type : 'application/pdf' });
+        } catch (e) {
+             console.log(e);
+             return null;
+        }
+    }
+
+    /* On submit btn failure */
+    function onFailure(error) {
+        console.log(error);
+
+        $('#modalPurchase').modal('hide');
+        var message = $('#message');
+        var button = $('#submitPurchaseOrder');
+        message.slideUp(500, function() {
+            message.html(
+                'Oops! Something went wrong.<br/>' +
+                'Verify that your internet connection is working properly and submit again.<br/>' +
+                'If the problem persist, contact Deven in IT for assistance.'
+            );
+            message.slideDown(500).fadeOut().fadeIn().fadeOut().fadeIn();
+        })
+
+        button.slideUp(500, function() {
+            button.find('.glyphicon')
+                .removeClass('glyphicon-save')
+                .addClass('glyphicon-refresh');
+            button.find('.text')
+                .text('  Retry Again');
+            button.slideDown(500);
+        })
+    }
+
+    /* On submit btn success */
+    function onSuccess(response) {
+        $('#modalPurchase').modal('hide');
+        var message = $('#message');
+        var button = $('#submitPurchaseOrder');
+
+        message.slideUp(800, function() {
+            message.html(
+                '<h1 style="margin:0 auto">Success!</h1><br/>' +
+                '<p id="message" class="hide-on-pdf">Your file has been created and saved to your computer.</p>'
+            );
+            message.slideDown(1400).fadeOut().fadeIn().fadeOut().fadeIn();
+        })
+
+        button.slideUp(500, function() {
+            button.find('.glyphicon')
+                .removeClass('glyphicon-arrow-right')
+                .addClass('glyphicon-repeat');
+            button.find('.text')
+                .text('  Download PDF Again');
+            button.slideDown(500);
+        })
+
+        var obj = JSON.parse(response);
+
+        if (obj.headers['Content-Type'] == 'application/pdf') {
+            var pdf = base64ToPDF(obj.response);
+            if (pdf != null) {
+                downloadFile(fileName + '.pdf', 'application/pdf', pdf);
+            } else {
+                onFailure(new Error('Failure to encode the pdf file!'));
+            }
+        } else {
+            var json = JSON.parse(obj.response);
+            if (json != {})
+                onFailure(new Error('Error [' + json.error.code + ']' + json.error.type + ': ' + json.error.info));
+            else
+                onFailure(new Error('Error: ' + obj.response));
+        }
+    }
+
+    /* Ensure edits are reflected on PDF */
+    function fixalltextarea() {
+        $(".undeftextarea").change(function() {
+            this.innerHTML = this.value;
+        });
+    }
+/* - - - - - - - End Conversion - - - - - - - */
+
+
+
+
+/* - - - - - - - Build/Format Phone - - - - - - */
+
+    /* Staff phone numbers */
+    var staff = [{
+            name: "Jimmy John",
+            directnumber: "+1 999 333 4444",
+            email: "jimmy@makecodenotwar.co"
+        },
+        {
+            name: "Johnny John",
+            directnumber: "+1 999 333 5555",
+            email: "johnny@makecodenotwar.co"
+        },
+        {
+            name: "Jillian John",
+            directnumber: "+1 999 333 6666",
+            email: "jillian@makecodenotwar.co"
+        },
+        {
+            name: "Jean John",
+            directnumber: "+1 999 333 7777",
+            email: "jean@makecodenotwar.co"
+        },
+    ];
+
+    /* Format doemstic and international phone numbers */
+    function searchPhone(val) {
+      //val = valraw.toLowerCase();
+      for (var i = 0; i < staff.length; i++) {
+          if (staff[i].name.indexOf(val) != -1 && val != "") {
+              v = staff[i].directnumber;
+              vb = staff[i].email;
+              break;
+          } else {
+              v= "";
+          }
+      }
+
+      elementv = document.getElementById("telphone");
+      elementv.setAttribute('value',v);
+      elementv.value=v;
+
+      elementvb = document.getElementById("emaile");
+      elementvb.setAttribute('value',vb);
+      elementvb.value=vb;
+
+      phoneMaskID('phone1');
+      phoneMaskID('telphone');
+    }
+
+        function searchPM(val) {
+      //val = valraw.toLowerCase();
+      for (var i = 0; i < staff.length; i++) {
+          if (staff[i].name.indexOf(val) != -1 && val != "") {
+              v = staff[i].directnumber;
+              vb = staff[i].email;
+              break;
+          } else {
+              v= "";
+          }
+      }
+
+      elementvb = document.getElementById("project-manager");
+      elementvb.setAttribute('value',vb);
+      elementvb.value=vb;
+    }
+
+    $(document).ready(function() {
+        $("#serphn").trigger("keyup")
+        $("#serphn2").trigger("keyup")
+        $(".undef").change(function() {
+        this.setAttribute("value",this.value);
+        });
+
+        fixalltextarea();
+    });
+
+    /* Format phone numbers */
+    function phoneMask() {
+        var num = $("input[type=tel]").val().replace(/\D/g, '');
+        if (num.length <= 10) {
+            $("input[type=tel]").val('(' + num.substring(0, 3) + ') ' + num.substring(3, 6) + ' ' + num.substring(6, 10));
+        } else {
+            $("input[type=tel]").val('+' + num.substring(0, 1) + ' (' + num.substring(1, 4) + ') ' + num.substring(4, 8) + ' ' + num.substring(8, 11) + ' ' + num.substring(11, 13) + ' ' + num.substring(13, 17) + ' ' + num.substring(17, 20));
+        }
+    }
+
+    function phoneMaskID(id) {
+        element=document.getElementById(id);
+        var num = element.value.replace(/\D/g, '');
+        if (num.length <= 10) {
+            element.setAttribute('value','(' + num.substring(0, 3) + ') ' + num.substring(3, 6) + ' ' + num.substring(6, 10));
+            element.value='(' + num.substring(0, 3) + ') ' + num.substring(3, 6) + ' ' + num.substring(6, 10);
+        } else {
+          element.setAttribute('value','+' + num.substring(0, 1) + ' (' + num.substring(1, 4) + ') ' + num.substring(4, 7) + ' ' + num.substring(7, 11) + ' ' + num.substring(11, 13) + ' ' + num.substring(13, 17) + ' ' + num.substring(17, 20));
+          element.value= '+' + num.substring(0, 1) + ' (' + num.substring(1, 4) + ') ' + num.substring(4, 7) + ' ' + num.substring(7, 11) + ' ' + num.substring(11, 13) + ' ' + num.substring(13, 17) + ' ' + num.substring(17, 20);
+        }
+    }
+
+    $(document).ready(function() {
+        phoneMask();
+    });
+
+
+
+/* - - - - - - - Top Right Header - - - - - - */
+
+    /* Format and print date */
+    function formatDate(d) {
+        return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear() + "\xa0\xa0\xa0\ ";
+    }
+    var date = new Date();
+    var datetime = formatDate(date);
+    $('#datetime').html(datetime);
+
+
+
+/* - - - - - - - - Local File Name Params - - - - - - - */
+
+ /* File name used when saving lcoally */
+    var fileNameRaw = 'WebForm';
+    var fileName = fileNameRaw;
+
+
+
+/* Hides all elements with 'hide-on-pdf' class */
+    $('.hideBeforePDFing').on('click', function() {
+        $('.hide-on-pdf').toggleClass('active');
+    });
+
+
+/* Update input, radio, textarea fields on btn submit */
+    function fixtextarea(id) {
+        element=document.getElementById(id);
+        element.innerHTML=element.value;
+    }
+
+    function fixalltextarea() {
+        $(".undeftextarea").change(function() {
+            this.innerHTML=this.value;
+        });
+    }
+
+    function recordRadioSelection() {
+        var
+            encodedRadio = "",
+            items = document.getElementsByClassName("item");
+        for (var i = 0; i < items.length; i++) {
+            encodedRadio += items[i].checked ? "1" : "0";
+        }
+      document.getElementsByClassName("item").value = encodedRadio;
+    }
+
+
+
+/* - - - - - - - - Tooltips - - - - - - - */
+    $("div").waypoint(function(){
+	      $(this).toggleClass('seen');
+          //$(this).parent().addClass('highlight')
+	    },
+        {
+		  offset: 1200
+        }
+     );
+
+
+
+
+/* - - - - - - - - Money Functions - - - - - - - */
+
+    /* Format Monies */
+    $(document).ready(function() {
+        formatcontrol('standardPrice');
+        formatcontrol('total');
+        formatcontrol('discountPrice');
+        sumAll();
+        formatcontrol('inputTextAddress');
+
+        $('#standardPrice').blur(function() {
+            formatcontrol('standardPrice');
+        });
+
+        $('#standardPrice').keyup(function() {
+            sumAll('standardPrice');
+        });
+
+        $('#discountPrice').blur(function() {
+            formatcontrol('discountPrice');
+        });
+
+        $('#discountPrice').keyup(function() {
+            sumAll('discountPrice');
+        });
+
+        $('#total').blur(function() {
+            formatcontrol('total');
+        });
+
+        $('#total').keyup(function() {
+            sumAll('total');
+        });
+
+        /* Calculate and Print Discount Amount */
+        function sumAll(except) {
+            var total, standardPrice, discountTotal;
+
+            /* Calculate Discount Price (difference bewteen standard and total) */
+            var s = $('#standardPrice').val();
+            var s = parseFloat(ff(s));
+            var t = $('#total').val();
+            var t = parseFloat(ff(t));
+            var discountTotal = t - s;
+            var field = $('#discountPrice');
+
+            field.val(discountTotal);
+            field.attr('value', discountTotal);
+
+            formatcontrol('discountPrice');
+         }
+
+
+         function formatcontrol(ename) {
+            field = $('#' + ename);
+
+            if (ename == 'inputTextAddress' && (field.val() == 'undefined' || field.val() == 0 || field.val() == 'Undefined'))
+               value = '';
+            else {
+                value = field.val();
+                value = parseFloat(ff(value));
+                value = formatMoney(value);
+            }
+
+            field.val(value);
+            field.attr('value', value);
+         }
+
+
+         function formatMoney(number, places, symbol, thousand, decimal) {
+            places = !isNaN(places = Math.abs(places)) ? places : 2;
+            symbol = symbol !== undefined ? symbol : "$";
+            thousand = thousand || ",";
+            decimal = decimal || ".";
+            var negative = number < 0 ? "-" : "",
+                i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+                j = (j = i.length) > 3 ? j % 3 : 0;
+            return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+        };
+
+
+        function ff(number, symbol, al = 0) {
+            symbol = symbol !== undefined ? symbol : "$";
+            var number2 = number.replace("$", "");
+            var number3 = number2.replace(/,/g, "");
+            var number4 = number3.replace(symbol, "");
+            return number4;
+        };
+
+     });
+
+</script>
