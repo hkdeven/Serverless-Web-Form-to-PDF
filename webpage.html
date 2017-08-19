@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <base target="_blank">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quick Quote Form/title>
+        <?!= HtmlService.createHtmlOutputFromFile('stylesheet').getContent(); ?>
+        <?!= HtmlService.createHtmlOutputFromFile('gmap').getContent(); ?>
+    </head>
+    <body>
+        <div id="printPage">
+        <section class="container">
+            <section class="content">
+                <section class="post">
+                    <aside class="pmeta">
+                        <p>date:
+                            <span id="datetime"></span>
+                        </p>
+                    </aside>
+                    <table cellpadding="0" cellspacing="0">
+                        <tr class="top">
+                            <td colspan="2">
+                                <table>
+                                    <tr>
+                                        <td class="title">
+                                            <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/281813/Allied-Black-Logo-trans-no-text.png" width="80" >
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="page4" class="form-data">
+                        <div id="toolpoint" class="tip1 hide-on-pdf">
+                            <p>Update this map location by changing the address fields under <strong>Building Address</strong>, located under the <strong>Client Information</strong> section.</p>
+                            <p><strong>Zoom</strong> in by double clicking.</p>
+                        </div>
+                        <h2 style="margin:-50px 0 45px 0;text-align: center;">Quote Request</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <form id="client-intel" class="client-intel" style="margin-bottom:115px;">
+                                        <h5>Client Information</h5>
+                                        <label>Client Name</label>
+                                        <input type="text" placeholder="FULL NAME" class="undef capitalize" id="leadName" style="margin-right: 0" value="<?= data.firstName ?> <?= data.lastName ?>"/>
+                                        <input type="text" placeholder="EMAIL" class="undef" style="width:64%;float: left;" value="<?= data.email ?>"/>
+                                        <input type="tel" placeholder="PHONE" class="undef undeftextarea" style="width:35%;float: left;margin-right: 0" value="<?= data.phone ?>" id="phone1" onload="phoneMaskID('phone1')" onchange="phoneMaskID('phone1')"/>
+                                        <label>Building Address</label>
+                                        <input type="text" placeholder="STREET ADDRESS" class="undef capitalize" id="inputTextAddress" onchange="geocode()" onkeyup="geocode()" onload="geocode()" style="margin-right: 0"value="<?= data.street ?>" />
+                                        <input type="text" placeholder="CITY" id="CITY" onchange="geocode()" onkeyup="geocode()" onload="geocode()"class="undef capitalize" style="float: left;width:58%;" value="<?= data.city ?>"/>
+                                        <input type="text" placeholder="STATE" id="STATE" onchange="geocode()" onkeyup="geocode()" onload="geocode()" class="undef capitalize" style="float: left;width:17%;" value="<?= data.state ?>" />
+                                        <input type="text" placeholder="ZIPCODE" class="undef capitalize" onkeyup="geocode()" onload="geocode()" style="float: left;width:23%;margin-right: 0" value="<?= data.zip ?>" />
+                                    </form>
+                                </div>
+                                <div class="row">
+                                    <form id="client-intel" class="client-intel" >
+                                        <h5>Allied Information</h5>
+                                        <label>Account Coordinator</label>
+                                        <input type="text" placeholder="SALES REP" class="undef" style="margin-right: 0" value="<?= data.leadOwner ?>" onkeyup="searchPhone(this.value)" id="serphn"/>
+                                        <input type="text" placeholder="EMAIL" class="undef" style="width:64%;float: left;" id="emaile"/>
+                                        <input type="text" placeholder="PHONE" class="undef" id="telphone" onload="phoneMaskID('telphone')" onchange="phoneMaskID('telphone')" style="width:35%;float: left;margin-right: 0;"/>
+                                        <label>Dedicated Project Manager</label>
+                                        <input type="text" placeholder="PROJECT MANAGER" class="pm undef" onkeyup="searchPM(this.value)" style="margin-right: 0"/>
+                                        <input type="text" placeholder="EMAIL" class="pm undef" id="project-manager" style="width:64%;float: left;"/>
+                                        <input type="text" value="+1 (888) 864 8666" class="undef pm-phone" style="width:35%;float: left;margin-right:0;"/>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <form id="client-intel">
+                                        <h5>BUILDING DETAILS</h5>
+                                        <label class="bd-label" style="margin-left: 15px;margin-top: 20px;letter-spacing:2px;color:#333333;font-size:12px !important;">DIMENSIONS</label>
+                                        <input type="text" placeholder="" class="undef" id="width" value="<?= data.width ?>" style="float:left;margin: 0 0 0 15px;width:70px;text-align: center;font-size:18px;" />
+                                        <input type="text" placeholder="X" class="undef" id="" style="float:left;margin: 0;width:40px;text-align: center;background: none;" disabled />
+                                        <input type="text" placeholder="" class="undef" id="length" value="<?= data.height ?>" style="float:left;margin: 0;width: 70px;text-align: center;font-size:18px;" />
+                                        <input type="text" placeholder="X" class="undef" id="" style="float:left;margin: 0;width:40px;text-align: center;background: none;" disabled />
+                                        <input type="text" placeholder="" class="undef" id="height" value="<?= data.length?>" style="float:left;margin: 0 50px 0 0;width: 70px;text-align: center;font-size:18px;" />
+                                        <input type="text" placeholder="1:12" class="undef" id="pitch" style="float:left;margin: 0 15px 0 0;width:120px;padding-left: 25px;font-size:18px;" />
+                                        <label style="float:left;margin: 5px 0 0 15px;width: 110px;padding-left: 5px;" >Width</label>
+                                        <label style="float:left;margin: 5px 0 0 0;width: 110px;padding-left: 5px;" >Length</label>
+                                        <label style="float:left;margin: 5px 50px 0 0;width: 70px;padding-left: 5px;" >Height</label>
+                                        <label style="float:left;margin: 5px 0 0 0;width: 100px;padding-left: 5px;" >Pitch</label>
+                                    </form>
+                                </div>
+                                <div class="row">
+                                    <form id="client-intel">
+                                        <label class="bd-label second" style="margin-left: 15px;margin-top: 20px;letter-spacing:2px;color:#333333;font-size:12px !important;">OPENINGS</label>
+                                        <textarea type="text" placeholder="NA" class="undef undeftextarea"></textarea>
+                                        <textarea type="text" placeholder="NA" class="undef undeftextarea"></textarea>
+                                        <textarea type="text" placeholder="NA" class="undef undeftextarea"></textarea>
+                                        <textarea type="text" placeholder="NA" class="undef undeftextarea"></textarea>
+                                        <label style="float:left;margin: 5px 14px 0;width: 94px;padding-left: 5px;" >LEW</label>
+                                        <label style="float:left;margin: 5px 14px 0;width: 94px;padding-left: 5px;" >REW</label>
+                                        <label style="float:left;margin: 5px 14px 0;width: 94px;padding-left: 5px;" >FSW</label>
+                                        <label style="float:left;margin: 5px 14px 0;width: 94px;padding-left: 5px;" >BSW</label>
+                                    </form>
+                                </div>
+                                <!-- Google Map -->
+                                <div id="map-canvas" class="hide-on-pdf"></div>
+                                <div id="map-img">
+                                    <!-- Sample map img url from google static api call -->
+                                    <!-- <img src="https://maps.googleapis.com/maps/api/staticmap?size=469x270&zoom=12&center=34.420830,-119.698189&style=element:geometry%7Ccolor:0x333434&style=element:labels.icon%7Cvisibility:off&style=element:labels.text.stroke%7Ccolor:0xf5f5f5&style=element:labels.text.fill%7Ccolor:0x616161&style=feature:administrative.land_parcel%7Celement:geometry%7Ccolor:0x313232&style=feature:administrative.land_parcel%7Celement:labels.text.fill%7Ccolor:0xbdbdbd&style=feature:landscape%7Ccolor:0xefefef&style=feature:poi%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:poi%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:poi.park%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:poi.park%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:road%7Celement:geometry%7Ccolor:0xffffff&style=feature:road.arterial%7Celement:labels%7Cvisibility:off&style=feature:road.arterial%7Celement:labels.text.fill%7Ccolor:0x757575&style=feature:road.highway%7Celement:geometry%7Ccolor:0xdadada&style=feature:road.highway%7Celement:labels%7Cvisibility:off&style=feature:road.highway%7Celement:labels.text.fill%7Ccolor:0x616161&style=feature:road.local%7Cvisibility:off&style=feature:road.local%7Cvisibility:off&style=feature:road.local%7Celement:labels.text.fill%7Ccolor:0x9e9e9e&style=feature:transit.line%7Celement:geometry%7Ccolor:0xe5e5e5&style=feature:transit.station%7Celement:geometry%7Ccolor:0xeeeeee&style=feature:water%7Ccolor:0x88d4f6&key=AIzaSyCuNoTA8pMW79WgmY37AVuIiICtUcJHnYg"/> -->
+                                </div>
+                                <!-- End Google Map -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 what_i_get">
+                                <h5>What do I get?</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 white-space">
+                                <ul class="included">
+                                    <li>
+                                        Commercial solid red iron I-beam frames, rafters, and end wall post
+                                    </li>
+                                    <li>
+                                        Pre-welded clips for easy erection, all pre-cut & pre-drilled
+                                    </li>
+                                    <li>
+                                        All necessary roof purlins and wall girts
+                                    </li>
+                                    <li>
+                                        Allied’s <strong>Sun Guard paneling</strong> (energy star rated) for side and end wall sheeting
+                                    </li>
+                                    <li>
+                                        Complete trim package
+                                    </li>
+                                    <li>
+                                        Carbon steel Fasteners with a lifetime warranty
+                                    </li>
+                                    <li>
+                                        All necessary hardware, nuts, bolts and self-drilling screws
+                                    </li>
+                                    <li>
+                                        Dedicated promject manager
+                                    </li>
+                                    <li>
+                                        Heavy Industrial Rod Bracing & Closure Strips included
+                                    </li>
+                                    <li>
+                                        A 40 year finish warranty on panels
+                                    </li>
+                                    <li>
+                                        Base closures for weather tightness
+                                    </li>
+                                    <li>
+                                        Weather Lock roof system, 80k psi including all washers and mastics
+                                    </li>
+                                    <li>
+                                        3 sets of Stamped certified engineered drawings
+                                        <b>guaranteed</b> to meet or exceed all municipal/ local codes
+                                    </li>
+                                    <li>
+                                        23 regional shipping distribution points for fast efficient delivery
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin:0;padding:0;">
+                            <h4 class="express-headline">ASK ABOUT OUR 3 WEEK EXPRESS PACKAGE</h4>
+                        </div>
+                        <div class="row" style="padding: 0;margin: 0;">
+                            <div class="col-md-12" style="padding-left: 0;padding-right: 0;margin: 0 0 0 -40px !important;">
+                                <div class="row quote-section">
+                                    <div class="col-md-3 factory-certs">
+                                        <h5>Factory Certifications</h5>
+                                        <img src="http://www.alliedbuildings.com/wp-content/uploads/2017/08/buyer-certifications.png" width="300"/>
+                                    </div>
+                                    <div class="col-md-9" style="width:690px;margin: 0;padding: 0;">
+                                        <form>
+                                            <div class="col-md-12" style="margin: 0;padding: 0;">
+                                                <label class="standard-label">Standard Price</label>
+                                                <input type="text" name="txt" class="txt" value="<?= data.standardPrice ?>" id="standardPrice">
+                                                <label class="standard-detail">(Valid for 30 days)</label>
+                                            </div>
+                                            <div class="col-md-12" style="margin: 0;padding: 0;">
+                                                <label class="discount-label">Discount Applied</label>
+                                                <input type="text" name="txt" class="txt" id="discountPrice">
+                                                <label class="discount-detail">(Offered on first come, first serve basis)</label>
+                                            </div>
+                                            <hr>
+                                            <div class="col-md-12" style="margin: 0;padding: 0;">
+                                                <input type="text" class="txt" value="<?= data.total ?>" id="total"/>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- end row -->
+                            </div>
+                            <!-- end col-12 -->
+                        </div>
+                        <!-- end row -->
+                    </div>
+                </section>
+            </section>
+        </section>
+        </div>
+        <div class="container text-center" style="margin-top: -20px !important">
+            <div id="message"></div>
+            <button class="btn btn-primary shadow hide-on-pdf" id="submitQuickQuote" onclick="submitQuickQuote()" data-toggle="modal" data-target="#modalPurchase" type="button" style="margin-bottom:15px;padding:20px 30px;letter-spacing:2px;text-transform:uppercase;">
+            <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+            <span class="text">   Download PDF</span>
+            </button>
+        </div>
+        <div class="modal fade" data-keyboard="false" data-backdrop="static" id="modalPurchase" role="dialog">
+            <div class="modal-dialog" style="width:460px;padding-top:130px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="text-align: center">Creating Quick Quote PDF</h4>
+                    </div>
+                    <div class="modal-body" style="height:120px">
+                        <div class="col-md-12" style="padding-left:0 !important">
+                            <div class="col-md-2" style="padding-left:0 !important">
+                                <img src="https://cdn.dribbble.com/users/59947/screenshots/3492457/busy-dribbble.gif" width="100">
+                            </div>
+                            <div class="col-md-9" style="margin-left:15px;padding-right:0">
+                                <p>Pay no attention to the man behind the curtain.
+                                    <br/>
+                                    Your file will be ready shortly...
+                                </p>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%"/></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end main container -->
+        <?!= HtmlService.createHtmlOutputFromFile('Javascript').getContent(); ?>
+    </body>
+</html>
