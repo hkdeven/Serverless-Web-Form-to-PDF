@@ -5,9 +5,6 @@ Clean, easy, professional webpage converts online form to PDF file using Google 
 
 <br>
 
-[![Top of webform screenshot](./assets/screenshot_top_half.png)][9]
-
-<br>
 
 --------------------------
 
@@ -28,7 +25,13 @@ Reference documentation resource links below for more details.
 | **[Google Geocoding API][7]** <br/> Convert street addresses into geographic coordinates (like latitude and longitude) which are required for Google Map generation. In our example web app, we use data from the address, city, state, and zipcode form fields to generate our map.  Necessary since we record only street address and not exact geographic coordinates in our CRM. | [Documentation][7] |    
 
 <br>
-<br>
+
+ ### Screenshots of web app and convert PDF:    
+ --------------------------
+
+
+[![Top of webform screenshot](./assets/screenshot_top_half.png)][9]
+
 
 [![Bottom of webform screenshot](./assets/screenshot_bottom_half.png)][9]    
 
