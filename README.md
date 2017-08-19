@@ -1,12 +1,11 @@
 
 # Serverless-Web-Form-to-PDF
 
-Clean, easy, professional webpage converts online form to PDF file using Google Apps Script, PDF Layer API, Zoho CRM API, Axios, Google Maps API, Google Static Maps API, and Google Geocoding API. :octocat:    
+Web app that converts online form to a presentation-ready PDF using Google Apps Script, PDF Layer API, Zoho CRM API, Axios, Google Maps API, Google Static Maps API, and Google Geocoding API. :octocat:    
 
 <br>
 
 
---------------------------
 
 ### DOCUMENTATION
 --------------------------
@@ -16,7 +15,7 @@ Reference documentation resource links below for more details.
 
 | Technologies Used :zap: | Links |
 |:-------|:------:|
-| **[Google Apps Script][1]** <br/> Platform on which this serverless web app is built. | [Documentation][1] |
+| **[Google Apps Script][1]** <br/> GAS is a scripting language based on JavaScript, a living platform in the cloud. | [Get Started][1] |
 | **[PDF Layer][2]**  -  High quality and highly customizable HTML to PDF conversion API.  It can be quite cumbersome to style PDF. <br> *TIP*:  Incline-css works best for styling final PDF document. Thank me later. | [Documentation][2] |
 | **[Zoho CRM API][3]** <br/> [Zoho][8] is an online customer relationship manager platform.  If Salesforce and Google had a baby, it's prodigy would be [Zoho][8].  The webpage in this web app is pre-populated with data from our [Zoho][8] CRM via it's RESTful API. | [Documentation][3] |
 | **[Axios][4]** <br/> A promise-based HTTP client that works both in the browser and in a node.js environment. It basically provides a single API for dealing with ```XMLHttpRequests``` and node’s ```http``` interface. Besides that, it wraps the requests using a polyfill for ES6 new’s promise syntax. | [How-to Article][4] |
@@ -44,7 +43,7 @@ Reference documentation resource links below for more details.
 ----------------------
 :octocat:  We love open source software  |  Hire us for your next project  |  [makecodenotwar.co][9]
 
-[1]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
+[1]: https://developers.google.com/apps-script/
 [2]: https://pdflayer.com/
 [3]: https://www.zoho.com/developer/rest-api.html
 [4]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
