@@ -1,5 +1,5 @@
 
-# Serverless-Web-Form-to-PDF    
+# Serverless-Web-Form-to-PDF
 
 Clean, easy, professional webpage converts online form to PDF file using Google Apps Script, PDF Layer API, Zoho CRM API, Axios, Google Maps API, Google Static Maps API, and Google Geocoding API. :octocat:
 
@@ -7,7 +7,7 @@ Clean, easy, professional webpage converts online form to PDF file using Google 
 
 ### DOCUMENTATION
 --------------------------
-Reference documentation resource links below for more details.    
+Reference documentation resource links below for more details.
 
 **Google Apps Script**  -  [[Link to Documentation]][1]
 Platform on which this serverless web app is built.
@@ -23,18 +23,19 @@ High quality and highly customizable HTML to PDF conversion API.  It can be quit
 A promise-based HTTP client that works both in the browser and in a node.js environment. It basically provides a single API for dealing with ```XMLHttpRequests``` and node’s ```http``` interface. Besides that, it wraps the requests using a polyfill for ES6 new’s promise syntax.
 
 **Google Maps API**  -  [[Link to Documentation]][5]
-
+Straight-forward Javascript API for map generation.
 
 **Google Static Maps API**  -  [[Link to Documentation]][6]
-
+Implement maps as images in your apps and sites.  When using PDF Layer and other HTML to PDF converters, you must provide an image-based map.  The conversion API doesn't recognize maps generated using the standard Google Maps API.  In this web app we initiated this Static API call when the user clicks to convert the webform to a PDF.  The returned object is injected with raw HTML to the page and thereby printed to the final PDF.
 
 **Google Geocoding API**  -  [[Link to Documentation]][7]
+Convert street addresses into geographic coordinates (like latitude and longitude) which are required for Google Map generation. In our example web app, we use data from the address, city, state, and zipcode form fields to generate our map.  Necessary since we record only street address and not exact geographic coordinates in our CRM.
 
 [1]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
 [2]: https://pdflayer.com/
 [3]: https://www.zoho.com/developer/rest-api.html
 [4]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
-[5]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
-[6]: http://codeheaven.io/how-to-use-axios-as-your-http-client/
+[5]: https://developers.google.com/maps/documentation/javascript/
+[6]: https://developers.google.com/maps/documentation/static-maps/
 [7]: https://developers.google.com/maps/documentation/geocoding/intro
 [8]: https://www.zoho.com/
